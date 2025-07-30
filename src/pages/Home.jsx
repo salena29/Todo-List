@@ -38,6 +38,11 @@ const Home = () => {
     setEditText(todo.name);
   };
 
+  const cancelEdit = () => {
+    setEditId(null);
+    setEditText("");
+  };
+
   const saveEdit = (id) => {
     const updated = todos.map((t) =>
       t.id === id ? { ...t, name: editText } : t
@@ -49,7 +54,9 @@ const Home = () => {
 
   const toggleStatus = (id) => {
     const updated = todos.map((t) =>
-      t.id === id ? { ...t, status: t.status === "Pending" ? "Completed" : "Pending" } : t
+      t.id === id
+        ? { ...t, status: t.status === "Pending" ? "Completed" : "Pending" }
+        : t
     );
     save(updated);
   };
@@ -68,6 +75,7 @@ const Home = () => {
           Logout
         </button>
       </div>
+
       <p className="mb-6">
         Welcome back, <span className="font-semibold">{user.username}</span>!
       </p>
@@ -114,7 +122,9 @@ const Home = () => {
               <td className="p-2">
                 <span
                   className={`px-2 py-1 rounded text-xs cursor-pointer ${
-                    t.status === "Completed" ? "bg-green-200" : "bg-yellow-200"
+                    t.status === "Completed"
+                      ? "bg-green-200 text-green-800"
+                      : "bg-yellow-200 text-yellow-800"
                   }`}
                   onClick={() => toggleStatus(t.id)}
                 >
@@ -123,26 +133,36 @@ const Home = () => {
               </td>
               <td className="p-2 space-x-2">
                 {editId === t.id ? (
-                  <button
-                    className="bg-green-500 text-white px-2 py-1 rounded"
-                    onClick={() => saveEdit(t.id)}
-                  >
-                    Save
-                  </button>
+                  <>
+                    <button
+                      className="bg-green-500 text-white px-2 py-1 rounded"
+                      onClick={() => saveEdit(t.id)}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="bg-gray-500 text-white px-2 py-1 rounded"
+                      onClick={cancelEdit}
+                    >
+                      Cancel
+                    </button>
+                  </>
                 ) : (
-                  <button
-                    className="bg-orange-400 text-white px-2 py-1 rounded"
-                    onClick={() => startEdit(t)}
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      className="bg-orange-400 text-white px-2 py-1 rounded"
+                      onClick={() => startEdit(t)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      onClick={() => deleteTodo(t.id)}
+                    >
+                      Delete
+                    </button>
+                  </>
                 )}
-                <button
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                  onClick={() => deleteTodo(t.id)}
-                >
-                  Delete
-                </button>
               </td>
             </tr>
           ))}
