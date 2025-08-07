@@ -26,10 +26,10 @@ const Login = () => {
         <input className="w-full border rounded p-2 mb-4" onChange={(e) => setUsername(e.target.value)} />
         <label className="block mb-2">Password</label>
         <input type="password" className="w-full border rounded p-2 mb-4" onChange={(e) => setPassword(e.target.value)} />
-        <button className="w-full bg-fuchsia-500 text-white py-2 rounded hover:bg-fuchsia-600" onClick={handleLogin}>
+        <button className="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600" onClick={handleLogin}>
           Login
         </button>
-        <p className="text-sm mt-4 text-center text-fuchsia-600 cursor-pointer" onClick={() => navigate("/register")}>
+        <p className="text-sm mt-4 text-center text-gray-600 cursor-pointer" onClick={() => navigate("/register")}>
           Don't have an account? Sign up
         </p>
       </div>

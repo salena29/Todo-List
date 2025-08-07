@@ -39,10 +39,10 @@ const Register = () => {
         <input type="password" className="w-full border rounded p-2 mb-4" onChange={(e) => setPassword(e.target.value)} />
         <label className="block mb-2">Confirm Password</label>
         <input type="password" className="w-full border rounded p-2 mb-4" onChange={(e) => setConfirmPassword(e.target.value)} />
-        <button className="w-full bg-fuchsia-500 text-white py-2 rounded hover:bg-fuchsia-600" onClick={handleRegister}>
+        <button className="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600" onClick={handleRegister}>
           Create Account
         </button>
-        <p className="text-sm mt-4 text-center text-fuchsia-600 cursor-pointer" onClick={() => navigate("/login")}>
+        <p className="text-sm mt-4 text-center text-gray-600 cursor-pointer" onClick={() => navigate("/login")}>
           Already have an account? Login
         </p>
       </div>

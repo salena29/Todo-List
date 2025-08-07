@@ -5,10 +5,13 @@ import { getCurrentUser, logout } from "../utils/auth";
 const Home = () => {
   const user = getCurrentUser();
   const navigate = useNavigate();
-  const [task, setTask] = useState("");
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [todos, setTodos] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [editText, setEditText] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
 
   const storageKey = `todos-${user.username}`;
 
@@ -23,10 +26,16 @@ const Home = () => {
   };
 
   const addTodo = () => {
-    if (!task.trim()) return;
-    const newTodo = { id: Date.now(), name: task, status: "Pending" };
+    if (!title.trim() || !description.trim()) return;
+    const newTodo = {
+      id: Date.now(),
+      title,
+      description,
+      status: "Pending",
+    };
     save([...todos, newTodo]);
-    setTask("");
+    setTitle("");
+    setDescription("");
   };
 
   const deleteTodo = (id) => {
@@ -35,21 +44,22 @@ const Home = () => {
 
   const startEdit = (todo) => {
     setEditId(todo.id);
-    setEditText(todo.name);
+    setEditTitle(todo.title);
+    setEditDescription(todo.description);
   };
 
   const cancelEdit = () => {
     setEditId(null);
-    setEditText("");
+    setEditTitle("");
+    setEditDescription("");
   };
 
   const saveEdit = (id) => {
     const updated = todos.map((t) =>
-      t.id === id ? { ...t, name: editText } : t
+      t.id === id ? { ...t, title: editTitle, description: editDescription } : t
     );
     save(updated);
-    setEditId(null);
-    setEditText("");
+    cancelEdit();
   };
 
   const toggleStatus = (id) => {
@@ -66,7 +76,7 @@ const Home = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Todo List</h1>
         <button
-          className="bg-fuchsia-500 text-white px-4 py-2 rounded hover:bg-fuchsia-600"
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
           onClick={() => {
             logout();
             navigate("/login");
@@ -80,26 +90,35 @@ const Home = () => {
         Welcome back, <span className="font-semibold">{user.username}</span>!
       </p>
 
-      <div className="flex mb-6">
+      {/* Add Task Input Fields */}
+      <div className="mb-6 space-y-2">
         <input
-          className="flex-1 border p-2 rounded-l"
-          placeholder="Enter new task..."
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
+          className="w-full border p-2 rounded"
+          placeholder="Enter task title..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="Enter task description..."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <button
-          className="bg-blue-500 text-white px-4 rounded-r"
+          className="bg-gray-500 text-white px-4 py-2 rounded"
           onClick={addTodo}
         >
           Add Task
         </button>
       </div>
 
+      {/* Task Table */}
       <table className="w-full bg-white rounded shadow overflow-hidden">
         <thead className="bg-gray-200">
           <tr>
             <th className="p-2">S.No</th>
-            <th className="p-2">Task Name</th>
+            <th className="p-2">Title</th>
+            <th className="p-2">Description</th>
             <th className="p-2">Status</th>
             <th className="p-2">Actions</th>
           </tr>
@@ -112,19 +131,30 @@ const Home = () => {
                 {editId === t.id ? (
                   <input
                     className="border p-1 w-full"
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
                   />
                 ) : (
-                  t.name
+                  t.title
+                )}
+              </td>
+              <td className="p-2">
+                {editId === t.id ? (
+                  <input
+                    className="border p-1 w-full"
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                  />
+                ) : (
+                  t.description
                 )}
               </td>
               <td className="p-2">
                 <span
                   className={`px-2 py-1 rounded text-xs cursor-pointer ${
                     t.status === "Completed"
-                      ? "bg-green-200 text-green-800"
-                      : "bg-yellow-200 text-yellow-800"
+                      ? "bg-gray-300 text-green-800"
+                      : "bg-gray-200 text-yellow-800"
                   }`}
                   onClick={() => toggleStatus(t.id)}
                 >
@@ -135,7 +165,7 @@ const Home = () => {
                 {editId === t.id ? (
                   <>
                     <button
-                      className="bg-green-500 text-white px-2 py-1 rounded"
+                      className="bg-gray-500 text-white px-2 py-1 rounded"
                       onClick={() => saveEdit(t.id)}
                     >
                       Save
@@ -150,13 +180,13 @@ const Home = () => {
                 ) : (
                   <>
                     <button
-                      className="bg-orange-400 text-white px-2 py-1 rounded"
+                      className="bg-gray-500 text-white px-2 py-1 rounded"
                       onClick={() => startEdit(t)}
                     >
                       Edit
                     </button>
                     <button
-                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      className="bg-gray-500 text-white px-2 py-1 rounded"
                       onClick={() => deleteTodo(t.id)}
                     >
                       Delete
